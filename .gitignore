@@ -1,0 +1,33 @@
+######################
+# Directories
+######################
+target/
+META-INF/
+classes/
+lib/
+.settings/
+
+######################
+# Class Files
+######################
+*.class
+
+######################
+# Package Files
+######################
+*.jar
+*.war
+
+######################
+# Eclipse
+######################
+.metadata
+.checkstyle
+.classpath
+.project
+
+######################
+# resources
+######################
+src/main/resources/application.properties
+src/main/resources/logback.xml
