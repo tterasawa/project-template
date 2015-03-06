@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="so.sabami.template.framework.persistence.CodeMasterMapper">
+
+  <select id="selectMaster" resultType="so.sabami.template.framework.domain.LabelValue">
+
+    SELECT
+    <choose>
+      <when test="valueColumn != null">
+          ${valueColumn} as value,
+      </when>
+      <otherwise>
+          item_cd as value,
+      </otherwise>
+    </choose>
+    <choose>
+      <when test="labelColumn != null">
+        <choose>
+          <when test="language != null and language != 'ja'">
+              <bind name="label" value="_parameter.getLabelColumn() + '_' + _parameter.getLanguage()" />
+              ${label} as label
+          </when>
+          <otherwise>
+              ${labelColumn} as label
+          </otherwise>
+        </choose>
+      </when>
+      <otherwise>
+        <choose>
+          <when test="language != null and language != 'ja'">
+              <bind name="label" value="'item_nm_' + _parameter.getLanguage()" />
+              ${label} as label
+          </when>
+          <otherwise>
+              item_nm as label     
+          </otherwise>
+        </choose>
+      </otherwise>
+    </choose>
+    FROM
+    ${tableName}
+    <where>
+      <if test="where != null">
+          ${where}
+      </if>
+    </where>
+    <if test="orderBy != null">
+        ORDER BY ${orderBy}
+    </if>
+  </select>
+</mapper>

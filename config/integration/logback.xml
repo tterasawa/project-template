@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- configuration file for LogBack (slf4J implementation) See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-through-the-java-loggers/ -->
+<configuration debug="true" scan="true" scanPeriod="30 seconds">
+
+  <property name="LoggingDir" value="/usr/local/tomcat7/logs/" />
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <file>${LoggingDir}adt.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LoggingDir}history/adt.%d{yyyy-MM-dd}.gz
+      </fileNamePattern>
+      <maxHistory>365</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] - %msg \(%F:%L\)%n</Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="MAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    <smtpHost>trelay1.lo.infoq.jp</smtpHost>
+    <from>system_dev_itst@gmo-research.jp</from>
+    <to>system_dev_itst@gmo-research.jp</to>
+    <subject>[adt][${ip.address}]System Error Report</subject>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] - %msg \(%F:%L\)%n</pattern>
+    </layout>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <logger name="so.sabami.template" level="debug" />
+  <logger name="org.springframework" level="info" />
+
+  <root level="degug">
+    <appender-ref ref="FILE" />
+    <appender-ref ref="MAIL" />
+  </root>
+</configuration>

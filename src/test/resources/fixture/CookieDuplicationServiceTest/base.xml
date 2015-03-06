@@ -1,0 +1,4 @@
+<dataset>
+    <cookie_duplication id="1" jn_monitor_id="100000001" grid="AAA"/>
+    <cookie_duplication id="2" jn_monitor_id="100000002" grid="BBB"/>
+</dataset>

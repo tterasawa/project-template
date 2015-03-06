@@ -1,0 +1,5 @@
+<dataset>
+    <code_master id="1" item_cd="01" item_nm="ラベル01" item_nm_en="label01" item_code="001" item_name="ラベル変更01" item_name_en="labelChange01" />
+    <code_master id="2" item_cd="02" item_nm="ラベル02" item_nm_en="label02" item_code="002" item_name="ラベル変更02" item_name_en="labelChange02" />
+    <code_master id="3" item_cd="03" item_nm="ラベル03" item_nm_en="label03" item_code="003" item_name="ラベル変更03" item_name_en="labelChange03" />
+</dataset>

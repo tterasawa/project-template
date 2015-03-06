@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Uncomment and add your base-package here:
+         <context:component-scan
+            base-package="org.springframework.samples.service"/>  -->
+  <context:component-scan base-package="so.sabami.template.service" />
+
+  <context:property-placeholder location="classpath:application.properties"/>
+
+  <bean id="dataSourceSpied" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://192.168.33.10:3306/terasawa_test"/>
+      <property name="username" value="demo"/>
+      <property name="password" value=""/>
+  </bean>
+
+  <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+      <constructor-arg ref="dataSourceSpied" />
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="so.sabami.template.framework.persistence;so.sabami.template.persistence" />
+  </bean>
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    <property name="typeAliasesPackage" value="so.sabami.template.domain"/>
+    <property name="plugins">
+      <ref bean="paginationInterceptor" />
+    </property>
+  </bean>
+
+  <bean id="paginationInterceptor" class="so.sabami.template.framework.pagination.PaginationInterceptor">
+    <property name="properties">
+      <props>
+        <prop key="sqlRegex">.*ByPage.*</prop>
+      </props>
+    </property>
+  </bean>
+
+</beans>

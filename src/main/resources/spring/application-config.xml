@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"   xmlns:jee="http://www.springframework.org/schema/jee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+">
+  <context:property-placeholder location="classpath:application.properties" />
+
+  <context:component-scan base-package="so.sabami.template.service" scope-resolver="org.springframework.context.annotation.Jsr330ScopeMetadataResolver" />
+
+<!-- 
+  <bean id="dataSourceSpied" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://192.168.33.10:3306/terasawa_test" />
+    <property name="username" value="demo" />
+    <property name="password" value="" />
+  </bean>
+ -->
+
+  <jee:jndi-lookup id="dataSourceSpied" jndi-name="jdbc/connectionFactory" />
+
+  <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+      <constructor-arg ref="dataSourceSpied" />
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
+  <tx:annotation-driven />
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="so.sabami.template.framework.persistence;so.sabami.template.persistence" />
+  </bean>
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    <property name="typeAliasesPackage" value="so.sabami.template.domain"/>
+    <property name="plugins">
+      <ref bean="paginationInterceptor" />
+    </property>
+  </bean>
+
+  <bean id="paginationInterceptor" class="so.sabami.template.framework.pagination.PaginationInterceptor">
+    <property name="properties">
+      <props>
+        <prop key="sqlRegex">.*ByPage.*</prop>
+      </props>
+    </property>
+  </bean>
+
+</beans>
